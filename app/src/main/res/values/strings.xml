@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Projectile Motion</string>
+    <string name="server_compute">Server compute</string>
+    <string name="local_compute">Local compute</string>
+    <string name="speed">Speed</string>
+    <string name="angle">Angle</string>
+    <string name="simulate">Simulate</string>
+</resources>
