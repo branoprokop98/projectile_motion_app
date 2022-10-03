@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -13,8 +14,11 @@ import android.view.ViewGroup;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.List;
+
 import sk.stuba.fei.mtmp.projectilemotion.MainViewModel;
 import sk.stuba.fei.mtmp.projectilemotion.R;
+import sk.stuba.fei.mtmp.projectilemotion.models.Motion;
 import sk.stuba.fei.mtmp.projectilemotion.service.HTTPService;
 import sk.stuba.fei.mtmp.projectilemotion.utils.Computation;
 
@@ -51,13 +55,18 @@ public class InputFragment extends Fragment {
 
         localButton.setOnClickListener(view -> {
             Computation computation = new Computation(Double.parseDouble(speedEditText.getText().toString()), Double.parseDouble(angleEditText.getText().toString()));
-            mainViewModel.setMotions(computation.getResult());
+            MutableLiveData<List<Motion>> motions = new MutableLiveData<>();
+            motions.postValue(computation.getResult());
+            mainViewModel.setMotions(motions);
             Navigation.findNavController(view).navigate(R.id.action_inputFragment_to_listFragment);
         });
 
         serverButton.setOnClickListener(view -> {
             HTTPService httpService = new HTTPService(getContext());
-            httpService.getResult(Double.parseDouble(speedEditText.getText().toString()), Double.parseDouble(angleEditText.getText().toString()), view, mainViewModel);
+            MutableLiveData<List<Motion>> result = httpService.getResult(Double.parseDouble(speedEditText.getText().toString()), Double.parseDouble(angleEditText.getText().toString()), getContext());
+            mainViewModel.setMotions(result);
+            Navigation.findNavController(view).navigate(R.id.action_inputFragment_to_listFragment);
+
 //            mainViewModel.setMotions(httpService.getMotions());
         });
 

@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_input" >
         <action
             android:id="@+id/action_inputFragment_to_listFragment"
-            app:destination="@id/listFragment" />
+            app:destination="@id/listFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/listFragment"
@@ -21,7 +25,11 @@
         tools:layout="@layout/fragment_list" >
         <action
             android:id="@+id/action_listFragment_to_graphFragment"
-            app:destination="@id/graphFragment" />
+            app:destination="@id/graphFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/graphFragment"
@@ -30,7 +38,11 @@
         tools:layout="@layout/fragment_graph" >
         <action
             android:id="@+id/action_graphFragment_to_animationFragment"
-            app:destination="@id/animationFragment" />
+            app:destination="@id/animationFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/animationFragment"

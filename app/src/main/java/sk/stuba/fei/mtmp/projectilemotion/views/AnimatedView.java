@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
@@ -28,8 +29,8 @@ public class AnimatedView extends AppCompatImageView {
         return motions;
     }
 
-    public void setMotions(List<Motion> motions) {
-        this.motions = motions;
+    public void setMotions(MutableLiveData<List<Motion>> motions) {
+        this.motions = motions.getValue();
     }
 
 

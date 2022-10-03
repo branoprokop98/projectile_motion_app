@@ -70,7 +70,7 @@ public class GraphFragment extends Fragment {
 
         ArrayList<Entry> values = new ArrayList<>();
 
-        mainViewModel.getMotions().forEach(f -> {
+        mainViewModel.getMotions().getValue().forEach(f -> {
             values.add(new Entry((float) f.getTime(), (float) f.getY()));
         });
 

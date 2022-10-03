@@ -1,10 +1,11 @@
 package sk.stuba.fei.mtmp.projectilemotion.service;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
 
-import androidx.navigation.Navigation;
+import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
@@ -14,13 +15,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import sk.stuba.fei.mtmp.projectilemotion.MainViewModel;
-import sk.stuba.fei.mtmp.projectilemotion.R;
 import sk.stuba.fei.mtmp.projectilemotion.models.Motion;
 
 public class HTTPService {
 
     private final MotionService motionService;
-    private List<Motion> motions;
+    private MutableLiveData<List<Motion>> motions;
     private Context context;
 
     public HTTPService(Context context) {
@@ -30,32 +30,41 @@ public class HTTPService {
             .build();
         this.context = context;
         motionService = retrofit.create(MotionService.class);
+        motions = new MutableLiveData<>();
     }
 
-    public void getResult(double speed, double angle, View view, MainViewModel mainViewModel) {
+    public MutableLiveData<List<Motion>> getResult(double speed, double angle, Context context) {
+
+        AlertDialog alertDialog = new AlertDialog.Builder(context)
+            .setTitle("Loading")
+            .setMessage("Downloading data")
+            .show();
+
         Call<List<Motion>> result = motionService.getResult(speed, angle);
         result.enqueue(new Callback<List<Motion>>() {
             @Override
             public void onResponse(Call<List<Motion>> call, Response<List<Motion>> response) {
 
-                Navigation.findNavController(view).navigate(R.id.action_inputFragment_to_listFragment);
-
-                mainViewModel.setMotions(response.body());
+                motions.postValue(response.body());
+                alertDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<List<Motion>> call, Throwable t) {
                 Log.e("result", t.getMessage());
+                alertDialog.dismiss();
                 result.cancel();
             }
         });
-    }
 
-    public List<Motion> getMotions() {
         return motions;
     }
 
-    public void setMotions(List<Motion> motions) {
+    public MutableLiveData<List<Motion>> getMotions() {
+        return motions;
+    }
+
+    public void setMotions(MutableLiveData<List<Motion>> motions) {
         this.motions = motions;
     }
 }

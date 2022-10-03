@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,9 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
+
 import sk.stuba.fei.mtmp.projectilemotion.MainViewModel;
 import sk.stuba.fei.mtmp.projectilemotion.R;
 import sk.stuba.fei.mtmp.projectilemotion.adapters.MotionDataAdapter;
+import sk.stuba.fei.mtmp.projectilemotion.models.Motion;
 
 public class ListFragment extends Fragment {
 
@@ -43,10 +47,12 @@ public class ListFragment extends Fragment {
         recyclerView = inflate.findViewById(R.id.motion_data_list);
         floatingActionButton = inflate.findViewById(R.id.graph_button);
 
-        MotionDataAdapter motionDataAdapter = new MotionDataAdapter(mainViewModel.getMotions());
+        mainViewModel.getMotions().observe(getActivity(), motions -> {
+            MotionDataAdapter motionDataAdapter = new MotionDataAdapter(motions);
+            recyclerView.setAdapter(motionDataAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        });
 
-        recyclerView.setAdapter(motionDataAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
