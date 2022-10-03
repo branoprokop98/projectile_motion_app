@@ -1,13 +1,15 @@
-package sk.stuba.fei.mtmp.projectilemotion.activities;
+package sk.stuba.fei.mtmp.projectilemotion.fragments;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
@@ -20,27 +22,35 @@ import com.github.mikephil.charting.utils.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import sk.stuba.fei.mtmp.projectilemotion.MainViewModel;
 import sk.stuba.fei.mtmp.projectilemotion.R;
-import sk.stuba.fei.mtmp.projectilemotion.models.Motion;
 
-public class ChartActivity extends AppCompatActivity {
 
-    private List<Motion> motions;
+public class GraphFragment extends Fragment {
+
+    private MainViewModel mainViewModel;
     FloatingActionButton floatingActionButton;
     LineChart volumeReportChart;
 
+    public GraphFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chart);
+    }
 
-        Bundle bundle = getIntent().getExtras();
-        motions = bundle.getParcelableArrayList("motion_list");
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View inflate = inflater.inflate(R.layout.fragment_graph, container, false);
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
-        volumeReportChart = findViewById(R.id.reportingChart);
-        floatingActionButton = findViewById(R.id.animation_button);
+        volumeReportChart = inflate.findViewById(R.id.reportingChart);
+        floatingActionButton = inflate.findViewById(R.id.animation_button);
         volumeReportChart.setTouchEnabled(true);
         volumeReportChart.setPinchZoom(true);
 
@@ -60,7 +70,7 @@ public class ChartActivity extends AppCompatActivity {
 
         ArrayList<Entry> values = new ArrayList<>();
 
-        motions.forEach(f -> {
+        mainViewModel.getMotions().forEach(f -> {
             values.add(new Entry((float) f.getTime(), (float) f.getY()));
         });
 
@@ -102,9 +112,10 @@ public class ChartActivity extends AppCompatActivity {
         }
 
         floatingActionButton.setOnClickListener(view -> {
-            Intent intent = new Intent(this, AnimationActivity.class);
-            intent.putParcelableArrayListExtra("motion_list", (ArrayList<? extends Parcelable>) motions);
-            startActivity(intent);
+            Navigation.findNavController(view).navigate(R.id.action_graphFragment_to_animationFragment);
         });
+
+
+        return inflate;
     }
 }

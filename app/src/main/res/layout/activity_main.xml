@@ -6,66 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/speed_edit_text"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginHorizontal="20dp"
-        android:background="@drawable/edit_text_layout"
-        android:paddingStart="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:inputType="number"
-        android:hint="@string/speed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2"/>
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/angle_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginHorizontal="20dp"
-        android:paddingStart="15dp"
-        android:background="@drawable/edit_text_layout"
-        android:inputType="number"
-        android:hint="@string/angle"
-        app:layout_constraintTop_toBottomOf="@id/speed_edit_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.1" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/angle_edit_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.1">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/local_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_layout"
-            android:textColor="@color/white"
-            android:padding="5dp"
-            android:text="@string/local_compute"
-            android:layout_margin="5dp"/>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/server_button"
-            android:layout_width="wrap_content"
-            android:background="@drawable/button_layout"
-            android:textColor="@color/white"
-            android:padding="5dp"
-            android:layout_height="wrap_content"
-            android:text="@string/server_compute"
-            android:layout_margin="5dp"/>
-
-    </LinearLayout>
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
