@@ -36,6 +36,8 @@ public class AnimationFragment extends Fragment {
         // Inflate the layout for this fragment
         View inflate = inflater.inflate(R.layout.fragment_animation, container, false);
 
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
         animatedView = inflate.findViewById(R.id.animated_view);

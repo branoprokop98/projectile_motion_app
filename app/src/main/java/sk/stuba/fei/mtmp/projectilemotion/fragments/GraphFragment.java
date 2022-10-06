@@ -1,5 +1,6 @@
 package sk.stuba.fei.mtmp.projectilemotion.fragments;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ public class GraphFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inflate = inflater.inflate(R.layout.fragment_graph, container, false);
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
         volumeReportChart = inflate.findViewById(R.id.reportingChart);

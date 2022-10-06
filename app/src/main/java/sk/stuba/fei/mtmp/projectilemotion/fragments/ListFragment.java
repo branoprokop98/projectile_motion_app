@@ -1,5 +1,6 @@
 package sk.stuba.fei.mtmp.projectilemotion.fragments;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,9 +44,12 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inflate = inflater.inflate(R.layout.fragment_list, container, false);
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         recyclerView = inflate.findViewById(R.id.motion_data_list);
         floatingActionButton = inflate.findViewById(R.id.graph_button);
+
+//        int test = ListFragmentArgs.fromBundle(getArguments()).getTest();
 
         mainViewModel.getMotions().observe(getActivity(), motions -> {
             MotionDataAdapter motionDataAdapter = new MotionDataAdapter(motions);
