@@ -1,11 +1,13 @@
 package sk.stuba.fei.mtmp.projectilemotion.fragments;
 
+import android.app.AlertDialog;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -16,6 +18,7 @@ import androidx.navigation.Navigation;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +27,14 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import sk.stuba.fei.mtmp.projectilemotion.MainViewModel;
 import sk.stuba.fei.mtmp.projectilemotion.R;
 import sk.stuba.fei.mtmp.projectilemotion.models.Motion;
 import sk.stuba.fei.mtmp.projectilemotion.service.HTTPService;
+import sk.stuba.fei.mtmp.projectilemotion.service.MotionService;
 import sk.stuba.fei.mtmp.projectilemotion.utils.Computation;
 
 public class InputFragment extends Fragment {
@@ -84,10 +91,7 @@ public class InputFragment extends Fragment {
 
         serverButton.setOnClickListener(view -> {
             if (checkInput()) return;
-            HTTPService httpService = new HTTPService(getContext());
-            MutableLiveData<List<Motion>> result = httpService.getResult(Double.parseDouble(speedEditText.getText().toString()), Double.parseDouble(angleEditText.getText().toString()), getContext());
-            mainViewModel.setMotions(result);
-            Navigation.findNavController(view).navigate(R.id.action_inputFragment_to_listFragment);
+            getServerComputation(Double.parseDouble(speedEditText.getText().toString()), Double.parseDouble(angleEditText.getText().toString()));
         });
     }
 
@@ -126,6 +130,40 @@ public class InputFragment extends Fragment {
                     localButton.setEnabled(true);
                     serverButton.setEnabled(true);
                 }
+            }
+        });
+    }
+
+    private void getServerComputation(double speed, double angle) {
+        HTTPService httpService = new HTTPService();
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+            .setTitle("Loading")
+            .setMessage("Downloading data")
+            .setCancelable(false)
+            .show();
+
+        Call<List<Motion>> result = httpService.getMotionService().getResult(speed, angle);
+        result.enqueue(new Callback<List<Motion>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Motion>> call, @NonNull Response<List<Motion>> response) {
+                MutableLiveData<List<Motion>> motions = new MutableLiveData<>();
+                motions.postValue(response.body());
+                mainViewModel.setMotions(motions);
+                alertDialog.dismiss();
+                Navigation.findNavController(getView()).navigate(R.id.action_inputFragment_to_listFragment);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Motion>> call, @NonNull Throwable t) {
+                Log.e("result", t.getMessage());
+                alertDialog.dismiss();
+                result.cancel();
+                new AlertDialog.Builder(getContext())
+                    .setTitle("Error")
+                    .setMessage(t.getMessage())
+                    .setPositiveButton("OK", (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                    }).show();
             }
         });
     }
