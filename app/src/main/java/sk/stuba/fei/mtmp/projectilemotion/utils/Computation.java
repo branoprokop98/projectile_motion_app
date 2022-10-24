@@ -17,6 +17,7 @@ public class Computation {
 
     public List<Motion> getResult() {
         List<Motion> results = new ArrayList<>();
+        results.add(new Motion(0, 0, 0.000));
         this.angle = Math.toRadians(this.angle);
         double x;
         double y;
